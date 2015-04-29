@@ -76,6 +76,7 @@ TYPED_TEST(SoftmaxWithLossLayerTest, TestForwardIgnoreLabel) {
   // Now, accumulate the loss, ignoring each label in {0, ..., 4} in turn.
   Dtype accum_loss = 0;
   for (int label = 0; label < 5; ++label) {
+    layer_param.mutable_loss_param()->clear_ignore_label();
     layer_param.mutable_loss_param()->add_ignore_label(label);
     layer.reset(new SoftmaxWithLossLayer<Dtype>(layer_param));
     layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
