@@ -555,7 +555,7 @@ class IgnoreOverlayLayer : public Layer<Dtype> {
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {}
   
   int num_, channels_, height_, width_;
-  int ignore_label_;
+  std::set<int> ignore_label_;
 };
 
 /**

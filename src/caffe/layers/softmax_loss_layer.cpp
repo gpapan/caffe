@@ -21,11 +21,8 @@ void SoftmaxWithLossLayer<Dtype>::LayerSetUp(
   softmax_top_vec_.clear();
   softmax_top_vec_.push_back(&prob_);
   softmax_layer_->SetUp(softmax_bottom_vec_, softmax_top_vec_);
-
-  has_ignore_label_ =
-    this->layer_param_.loss_param().has_ignore_label();
-  if (has_ignore_label_) {
-    ignore_label_ = this->layer_param_.loss_param().ignore_label();
+  for (int i = 0; i < this->layer_param_.loss_param().ignore_label_size(); ++i) {
+    ignore_label_.insert(this->layer_param_.loss_param().ignore_label(i));
   }
   normalize_ = this->layer_param_.loss_param().normalize();
 }
@@ -63,7 +60,7 @@ void SoftmaxWithLossLayer<Dtype>::Forward_cpu(
   for (int i = 0; i < outer_num_; ++i) {
     for (int j = 0; j < inner_num_; j++) {
       const int label_value = static_cast<int>(label[i * inner_num_ + j]);
-      if (has_ignore_label_ && label_value == ignore_label_) {
+      if (ignore_label_.count(label_value) != 0) {
         continue;
       }
       DCHECK_GE(label_value, 0);
@@ -100,7 +97,7 @@ void SoftmaxWithLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
     for (int i = 0; i < outer_num_; ++i) {
       for (int j = 0; j < inner_num_; ++j) {
         const int label_value = static_cast<int>(label[i * inner_num_ + j]);
-        if (has_ignore_label_ && label_value == ignore_label_) {
+        if (ignore_label_.count(label_value) != 0) {
           for (int c = 0; c < bottom[0]->shape(softmax_axis_); ++c) {
             bottom_diff[i * dim + c * inner_num_ + j] = 0;
           }

@@ -9,7 +9,9 @@ template <typename Dtype>
 void IgnoreOverlayLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   IgnoreOverlayParameter param = this->layer_param_.ignore_overlay_param();
-  ignore_label_ = param.ignore_label();
+  for (int i = 0; i < param.ignore_label_size(); ++i){
+    ignore_label_.insert(param.ignore_label(i));
+  }
 }
 
 template <typename Dtype>
@@ -36,7 +38,7 @@ void IgnoreOverlayLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   Dtype* top_data = top[0]->mutable_cpu_data();
   for (int i = 0; i < bottom[0]->count(); ++i) {
     const int value = bottom_data[i];
-    if (value == ignore_label_) {
+    if (ignore_label_.count(value) != 0) {
       top_data[i] = static_cast<Dtype>(value);
     }
   }

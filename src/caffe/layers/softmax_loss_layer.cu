@@ -45,9 +45,12 @@ void SoftmaxWithLossLayer<Dtype>::Forward_gpu(
   // to avoid having to allocate additional GPU memory.
   Dtype* counts = prob_.mutable_gpu_diff();
   // NOLINT_NEXT_LINE(whitespace/operators)
+  CHECK_LE(ignore_label_.size(), 1);
+  const bool has_ignore_label = !ignore_label_.empty();
+  const int ignore_label = (has_ignore_label) ? *ignore_label_.begin() : 0;
   SoftmaxLossForwardGPU<Dtype><<<CAFFE_GET_BLOCKS(nthreads),
       CAFFE_CUDA_NUM_THREADS>>>(nthreads, prob_data, label, loss_data,
-      outer_num_, dim, inner_num_, has_ignore_label_, ignore_label_, counts);
+      outer_num_, dim, inner_num_, has_ignore_label, ignore_label, counts);
   Dtype loss;
   caffe_gpu_asum(nthreads, loss_data, &loss);
   if (normalize_) {
@@ -106,9 +109,12 @@ void SoftmaxWithLossLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     // we use to to avoid allocating new GPU memory.
     Dtype* counts = prob_.mutable_gpu_diff();
     // NOLINT_NEXT_LINE(whitespace/operators)
+    CHECK_LE(ignore_label_.size(), 1);
+    const bool has_ignore_label = !ignore_label_.empty();
+    const int ignore_label = (has_ignore_label) ? *ignore_label_.begin() : 0;
     SoftmaxLossBackwardGPU<Dtype><<<CAFFE_GET_BLOCKS(nthreads),
         CAFFE_CUDA_NUM_THREADS>>>(nthreads, top_data, label, bottom_diff,
-        outer_num_, dim, inner_num_, has_ignore_label_, ignore_label_, counts);
+        outer_num_, dim, inner_num_, has_ignore_label, ignore_label, counts);
     const Dtype loss_weight = top[0]->cpu_diff()[0];
     if (normalize_) {
       Dtype count;

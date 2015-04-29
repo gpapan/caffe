@@ -372,8 +372,8 @@ message TransformationParameter {
 
 // Message that stores parameters shared by loss layers
 message LossParameter {
-  // If specified, ignore instances with the given label.
-  optional int32 ignore_label = 1;
+  // If specified, ignore instances with the given labels.
+  repeated int32 ignore_label = 1;
   // If true, normalize each batch across all instances (including spatial
   // dimesions, but not ignored instances); else, divide by batch size only.
   optional bool normalize = 2 [default = true];
@@ -392,9 +392,8 @@ message AccuracyParameter {
   // (N x C x H x W), the label blob is expected to contain N*H*W ground truth
   // labels with integer values in {0, 1, ..., C-1}.
   optional int32 axis = 2 [default = 1];
-
-  // If specified, ignore instances with the given label.
-  optional int32 ignore_label = 3;
+  // If specified, ignore instances with the given labels.
+  repeated int32 ignore_label = 3;
 }
 
 // Message that stores parameters used by AdaptiveBiasChannelLayer
@@ -415,7 +414,7 @@ message ArgMaxParameter {
 
 // Message that stores parameters used by BiasChannelLayer
 message BiasChannelParameter {
-  // Used for initializing the bias. Separate values for BG / FG
+  // Score biases. Separate values for BG / FG
   optional float bg_bias = 1 [default = 1.];
   optional float fg_bias = 2 [default = 2.];
   // will ignore labels with this value when adding bias
@@ -638,7 +637,7 @@ message HistogramParameter {
 }
 
 message IgnoreOverlayParameter {
-  optional int32 ignore_label = 1;
+  repeated int32 ignore_label = 1;
 }
 
 // Message that stores parameters used by ImageDataLayer
@@ -832,7 +831,7 @@ message ReLUParameter {
   optional Engine engine = 2 [default = DEFAULT];
 }
 
-// Message that stores parametres used by SegAccuracyLayer
+// Message that stores parameters used by SegAccuracyLayer
 message SegAccuracyParameter {
   enum AccuracyMetric {
     PixelAccuracy = 0;
@@ -886,8 +885,6 @@ message SoftmaxParameter {
 message SoftmaxLossParameter {
   // specify the data source for loss_weights_
   optional string weight_source = 16;
-  // will ignore pixels with this value when computing accuracy
-  repeated int32 ignore_label = 2;
 }
 
 // Message that stores parameters used by TanHLayer
@@ -908,7 +905,7 @@ message ThresholdParameter {
 // Message that stores parameters used by UniqueLabelLayer
 message UniqueLabelParameter {
   required int32 max_labels = 1;
-  repeated float ignore_label = 2;
+  repeated int32 ignore_label = 2;
   repeated float force_label = 3;
 }
 
