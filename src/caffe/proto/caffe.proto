@@ -325,11 +325,11 @@ message LayerParameter {
   optional HingeLossParameter hinge_loss_param = 122;
   optional HistogramParameter histogram_param = 123;
   optional ImageDataParameter image_data_param = 124;
-  optional IgnoreOverlayParameter ignore_overlay_param = 125;
   optional InfogainLossParameter infogain_loss_param = 126;
   optional InnerProductParameter inner_product_param = 127;
   optional InterpParameter interp_param = 128;
   optional LRNParameter lrn_param = 129;
+  optional MaskParameter mask_param = 125;
   optional MatReadParameter mat_read_param = 130;
   optional MatWriteParameter mat_write_param = 131;
   optional MemoryDataParameter memory_data_param = 132;
@@ -636,10 +636,6 @@ message HistogramParameter {
   repeated int32 ignore_label = 2;
 }
 
-message IgnoreOverlayParameter {
-  repeated int32 ignore_label = 1;
-}
-
 // Message that stores parameters used by ImageDataLayer
 message ImageDataParameter {
   // Specify the data source.
@@ -721,6 +717,15 @@ message LRNParameter {
   }
   optional NormRegion norm_region = 4 [default = ACROSS_CHANNELS];
   optional float k = 5 [default = 1.];
+}
+
+// Message that stores parameters used by MaskLayer
+message MaskParameter {
+  optional float fg_value = 1 [default = 1];
+  optional float bg_value = 2 [default = 0];
+  optional float fg_ratio = 3 [default = 0.5];
+  optional int32 height = 4 [default = 10]; // box's height
+  optional int32 width = 5 [default = 10]; // box's width
 }
 
 // Message that stores parameters used by MatReadLayer

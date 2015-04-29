@@ -165,7 +165,7 @@ TYPED_TEST(AccuracyLayerTest, TestForwardIgnoreLabel) {
   Caffe::set_mode(Caffe::CPU);
   LayerParameter layer_param;
   const TypeParam kIgnoreLabelValue = -1;
-  layer_param.mutable_accuracy_param()->set_ignore_label(kIgnoreLabelValue);
+  layer_param.mutable_accuracy_param()->add_ignore_label(kIgnoreLabelValue);
   AccuracyLayer<TypeParam> layer(layer_param);
   // Manually set some labels to the ignore label value (-1).
   this->blob_bottom_label_->mutable_cpu_data()[2] = kIgnoreLabelValue;

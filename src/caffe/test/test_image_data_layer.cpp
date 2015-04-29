@@ -33,7 +33,7 @@ class ImageDataLayerTest : public MultiDeviceTest<TypeParam> {
     std::ofstream outfile(filename_.c_str(), std::ofstream::out);
     LOG(INFO) << "Using temporary file " << filename_;
     for (int i = 0; i < 5; ++i) {
-      outfile << EXAMPLES_SOURCE_DIR "images/cat.jpg " << i;
+      outfile << EXAMPLES_SOURCE_DIR "images/cat.jpg " << i << std::endl;;
     }
     outfile.close();
     // Create test input file for images of distinct sizes.

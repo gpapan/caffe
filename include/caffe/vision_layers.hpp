@@ -531,34 +531,6 @@ class HistogramLayer : public Layer<Dtype> {
 };
 
 /**
-   @brief The output equals to bottom[1] except for the positions in bottom[0]
-   where the value of bottom[0] equals to ignore_label
- */
-template <typename Dtype>
-class IgnoreOverlayLayer : public Layer<Dtype> {
- public:
-  explicit IgnoreOverlayLayer(const LayerParameter& param)
-      : Layer<Dtype>(param) {}
-  virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
-  virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
-
-  virtual inline const char* type() const { return "IgnoreOverlay"; }
-  virtual inline int ExactNumBottomBlobs() const { return 2; }
-  virtual inline int ExactNumTopBlobs() const { return 1; }
-
- protected:
-  virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
-  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
-      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {}
-  
-  int num_, channels_, height_, width_;
-  std::set<int> ignore_label_;
-};
-
-/**
  * @brief A helper for image operations that rearranges image regions into
  *        column vectors.  Used by ConvolutionLayer to perform convolution
  *        by matrix multiplication.

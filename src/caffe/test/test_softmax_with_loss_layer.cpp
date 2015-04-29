@@ -76,7 +76,7 @@ TYPED_TEST(SoftmaxWithLossLayerTest, TestForwardIgnoreLabel) {
   // Now, accumulate the loss, ignoring each label in {0, ..., 4} in turn.
   Dtype accum_loss = 0;
   for (int label = 0; label < 5; ++label) {
-    layer_param.mutable_loss_param()->set_ignore_label(label);
+    layer_param.mutable_loss_param()->add_ignore_label(label);
     layer.reset(new SoftmaxWithLossLayer<Dtype>(layer_param));
     layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
     layer->Forward(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -90,7 +90,7 @@ TYPED_TEST(SoftmaxWithLossLayerTest, TestGradientIgnoreLabel) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
   // labels are in {0, ..., 4}, so we'll ignore about a fifth of them
-  layer_param.mutable_loss_param()->set_ignore_label(0);
+  layer_param.mutable_loss_param()->add_ignore_label(0);
   SoftmaxWithLossLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 1e-2, 1701);
   checker.CheckGradientExhaustive(&layer, this->blob_bottom_vec_,

@@ -145,21 +145,20 @@ class ConcatLayer : public Layer<Dtype> {
 
 /**
  * @brief Find the top_k stronger channels of the input blob and output their indices.
- *
  * Intended for use to prune class labels who are least promising (score low
  * across the image). The following criterion is used:
  * We count at how many image positions each label (channel) is argmax and
  * sort the channels accordingly.
- */
+*/
 template <typename Dtype>
 class DominantChannelLayer : public Layer<Dtype> {
  public:
   explicit DominantChannelLayer(const LayerParameter& param)
       : Layer<Dtype>(param) {}
   virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
+     const vector<Blob<Dtype>*>& top);
   virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
+     const vector<Blob<Dtype>*>& top);
 
   virtual inline const char* type() const { return "DominantChannel"; }
   virtual inline int ExactNumBottomBlobs() const { return 1; }
@@ -167,9 +166,9 @@ class DominantChannelLayer : public Layer<Dtype> {
 
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
+     const vector<Blob<Dtype>*>& top);
   virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
-      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+     const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
   int num_, channels_, height_, width_;
   size_t top_k_;
 };
@@ -293,6 +292,38 @@ class InnerProductLayer : public Layer<Dtype> {
   int N_;
   bool bias_term_;
   Blob<Dtype> bias_multiplier_;
+};
+
+/**
+   Mask: Create a Mask with 1 / 0's.
+   Start with all ones. Then put rectangles of rect_{height,width} of
+   zeros at random positions so that the portion of zeros equals approx
+   miss_ratio. All channels share the same mask.
+ */
+template <typename Dtype>
+class MaskLayer : public Layer<Dtype> {
+ public:
+  explicit MaskLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+  virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+  virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+
+  virtual inline const char* type() const { return "Mask"; }
+  virtual inline int ExactNumBottomBlobs() const { return 1; }
+  virtual inline int ExactNumTopBlobs() const { return 1; }
+
+ protected:
+  virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+  }
+  int num_, channels_, height_, width_;
+  int rect_height_, rect_width_;
+  Dtype fg_value_, bg_value_;
+  Dtype fg_ratio_;
 };
 
 /**
