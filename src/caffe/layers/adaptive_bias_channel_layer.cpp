@@ -178,5 +178,6 @@ void AdaptiveBiasChannelLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& t
 #endif
 
 INSTANTIATE_CLASS(AdaptiveBiasChannelLayer);
+REGISTER_LAYER_CLASS(AdaptiveBiasChannel);
 
 }  // namespace caffe

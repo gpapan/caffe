@@ -56,5 +56,6 @@ void HistogramLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 #endif
 
 INSTANTIATE_CLASS(HistogramLayer);
+REGISTER_LAYER_CLASS(Histogram);
 
 }  // namespace caffe

@@ -52,5 +52,6 @@ void OneHotLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 }
 
 INSTANTIATE_CLASS(OneHotLayer);
+REGISTER_LAYER_CLASS(OneHot);
 
 }  // namespace caffe
