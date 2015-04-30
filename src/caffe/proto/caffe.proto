@@ -884,12 +884,8 @@ message SoftmaxParameter {
   // from the end (e.g., -1 for the last axis).
   // Any other axes will be evaluated as independent softmaxes.
   optional int32 axis = 2 [default = 1];
-}
-
-// Message that stores parametres used by SoftmaxWithLossLayer
-message SoftmaxLossParameter {
   // specify the data source for loss_weights_
-  optional string weight_source = 16;
+  optional string weight_source = 3;
 }
 
 // Message that stores parameters used by TanHLayer

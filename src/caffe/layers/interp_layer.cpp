@@ -96,11 +96,12 @@ void InterpLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     top[0]->gpu_diff(), 0, 0, height_out_, width_out_, height_out_, width_out_);
 }
 #endif
+
 #ifdef CPU_ONLY
 STUB_GPU(InterpLayer);
 #endif
 
-
 INSTANTIATE_CLASS(InterpLayer);
+REGISTER_LAYER_CLASS(Interp);
 
 }  // namespace caffe
