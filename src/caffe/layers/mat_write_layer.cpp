@@ -4,7 +4,7 @@
 #include "caffe/layer.hpp"
 #include "caffe/vision_layers.hpp"
 #include "caffe/syncedmem.hpp"
-#include "caffe/util/io.hpp"
+#include "caffe/util/matio_io.hpp"
 #include <sstream>
 
 namespace caffe {

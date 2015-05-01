@@ -706,6 +706,7 @@ class MatReadLayer : public Layer<Dtype> {
       const vector<Blob<Dtype>*>& top);
   virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+  void ReadBlobFromMat(const char *fname, Blob<Dtype>* blob);
 
   bool reshape_;
   int batch_size_;
