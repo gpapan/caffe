@@ -425,7 +425,7 @@ class DenseCRFLayer : public Layer<Dtype> {
   virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
 
-  virtual inline const char* type() const { return "DenseCrf"; }
+  virtual inline const char* type() const { return "DenseCRF"; }
   // will take DCNN output, image (optional) and image_dim as input
   virtual inline int MinBottomBlobs() const { return 2; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
