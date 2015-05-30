@@ -359,12 +359,13 @@ message LayerParameter {
   optional SegAccuracyParameter seg_accuracy_param = 142;
   optional SigmoidParameter sigmoid_param = 143;
   optional SoftmaxParameter softmax_param = 144;
-  optional SliceParameter slice_param = 145;
-  optional SPPParameter spp_param = 146;
-  optional TanHParameter tanh_param = 147;
-  optional ThresholdParameter threshold_param = 148;
-  optional UniqueLabelParameter unique_label_param = 149;
-  optional WindowDataParameter window_data_param = 150;
+  optional SoftmaxLossParameter softmax_loss_param = 145;
+  optional SliceParameter slice_param = 146;
+  optional SPPParameter spp_param = 147;
+  optional TanHParameter tanh_param = 148;
+  optional ThresholdParameter threshold_param = 149;
+  optional UniqueLabelParameter unique_label_param = 150;
+  optional WindowDataParameter window_data_param = 151;
 }
 
 // Message that stores parameters used to apply transformation
@@ -947,7 +948,7 @@ message SoftmaxParameter {
 }
 
 message SoftmaxLossParameter {
-  // specify the data source for loss_weights_
+  // specify the data source for loss_weights
   optional string weight_source = 3;
 }
 

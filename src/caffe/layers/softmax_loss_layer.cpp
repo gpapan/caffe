@@ -26,8 +26,8 @@ void SoftmaxWithLossLayer<Dtype>::LayerSetUp(
   }
   normalize_ = this->layer_param_.loss_param().normalize();
   // read the weight for each class
-  if (this->layer_param_.softmax_param().has_weight_source()) {
-    const string& weight_source = this->layer_param_.softmax_param().weight_source();
+  if (this->layer_param_.softmax_loss_param().has_weight_source()) {
+    const string& weight_source = this->layer_param_.softmax_loss_param().weight_source();
     LOG(INFO) << "Opening file " << weight_source;
     std::fstream infile(weight_source.c_str(), std::fstream::in);
     CHECK(infile.is_open());
