@@ -29,7 +29,7 @@ class BiasChannelLayerTest : public MultiDeviceTest<TypeParam> {
     filler.reset(new GaussianFiller<Dtype>(filler_param));
     filler->Fill(this->blob_bottom_0);
     for (int i = 0; i < blob_bottom_1->count(); ++i) {
-      blob_bottom_1->mutable_cpu_data()[i] = 1 + caffe_rng_rand() % 3;  // 1, 2, 3
+      blob_bottom_1->mutable_cpu_data()[i] = caffe_rng_rand() % 4;  // 0, 1, 2, 3
     }
     blob_bottom_vec_.push_back(blob_bottom_0);
     blob_bottom_vec_.push_back(blob_bottom_1);
@@ -75,11 +75,10 @@ TYPED_TEST(BiasChannelLayerTest, TestCPU) {
   layer.Forward(this->blob_bottom_vec_, this->blob_top_vec_);
   for (int n = 0; n < this->blob_bottom_0->num(); ++n) {
     vector<Dtype> values(this->blob_bottom_0->channels(), 0);
-    values[0] = bg_bias;
     for (int j = 0; j < this->blob_bottom_1->channels(); ++j) {
       const int label = *this->blob_bottom_1->cpu_data(n, j);
-      CHECK(label > 0 && label < values.size());
-      values[label] += fg_bias;
+      CHECK(label >= 0 && label < values.size());
+      values[label] += (label == 0) ? bg_bias : fg_bias;
     }
     for (int c = 0; c < this->blob_bottom_0->channels(); ++c) {
       for (int h = 0; h < this->blob_bottom_0->height(); ++h) {
@@ -106,11 +105,10 @@ TYPED_TEST(BiasChannelLayerTest, TestGPU) {
   layer.Forward(this->blob_bottom_vec_, this->blob_top_vec_);
   for (int n = 0; n < this->blob_bottom_0->num(); ++n) {
     vector<Dtype> values(this->blob_bottom_0->channels(), 0);
-    values[0] = bg_bias;
     for (int j = 0; j < this->blob_bottom_1->channels(); ++j) {
       const int label = *this->blob_bottom_1->cpu_data(n, j);
-      CHECK(label > 0 && label < values.size());
-      values[label] += fg_bias;
+      CHECK(label >= 0 && label < values.size());
+      values[label] += (label == 0) ? bg_bias : fg_bias;
     }
     for (int c = 0; c < this->blob_bottom_0->channels(); ++c) {
       for (int h = 0; h < this->blob_bottom_0->height(); ++h) {

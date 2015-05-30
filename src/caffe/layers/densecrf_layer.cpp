@@ -374,5 +374,6 @@ void DenseCRFLayer<Dtype>::SetupUnaryEnergy(const Dtype* bottom_data) {
 }
  
 INSTANTIATE_CLASS(DenseCRFLayer);
+REGISTER_LAYER_CLASS(DenseCRF);
 
 }  // namespace caffe

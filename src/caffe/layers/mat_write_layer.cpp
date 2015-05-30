@@ -4,6 +4,7 @@
 #include "caffe/layer.hpp"
 #include "caffe/vision_layers.hpp"
 #include "caffe/syncedmem.hpp"
+#include "caffe/util/matio_io.hpp"
 #include <sstream>
 
 namespace caffe {
@@ -53,7 +54,7 @@ void MatWriteLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 	oss << "iter_" << iter_;
       }
       oss << "_blob_" << i << ".mat";
-      bottom[i]->ToMat(oss.str().c_str(), false);
+      WriteBlobToMat(oss.str().c_str(), false, bottom[i]);
     }
   }
   ++iter_;
@@ -68,5 +69,6 @@ void MatWriteLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
 
 
 INSTANTIATE_CLASS(MatWriteLayer);
+REGISTER_LAYER_CLASS(MatWrite);
 
 }  // namespace caffe

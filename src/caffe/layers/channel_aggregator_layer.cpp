@@ -129,5 +129,6 @@ void ChannelAggregatorLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top
 }
 
 INSTANTIATE_CLASS(ChannelAggregatorLayer);
+REGISTER_LAYER_CLASS(ChannelAggregator);
 
 }  // namespace caffe

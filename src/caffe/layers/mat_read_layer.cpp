@@ -4,6 +4,7 @@
 #include "caffe/layer.hpp"
 #include "caffe/vision_layers.hpp"
 #include "caffe/syncedmem.hpp"
+#include "caffe/util/matio_io.hpp"
 #include <sstream>
 
 namespace caffe {
@@ -61,7 +62,7 @@ void MatReadLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       }
       oss << "_blob_" << i << ".mat";
       Blob<Dtype> blob;
-      blob.FromMat(oss.str().c_str());
+      ReadBlobFromMat(oss.str().c_str(), &blob);
       CHECK_EQ(blob.num(), 1);
       if (reshape_) {
 	top[i]->Reshape(batch_size_, blob.channels(), blob.height(), blob.width());
@@ -71,6 +72,8 @@ void MatReadLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 	      && blob.height() == top[i]->height() 
 	      && blob.width()  == top[i]->width());
       }
+      caffe_copy(blob.count(), blob.cpu_data(),
+	  top[i]->mutable_cpu_data(n));
     }
     ++iter_;
   }
@@ -84,5 +87,6 @@ void MatReadLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
 }
 
 INSTANTIATE_CLASS(MatReadLayer);
+REGISTER_LAYER_CLASS(MatRead);
 
 }  // namespace caffe

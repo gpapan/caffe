@@ -241,5 +241,6 @@ void ImageSegDataLayer<Dtype>::InternalThreadEntry() {
 }
 
 INSTANTIATE_CLASS(ImageSegDataLayer);
+REGISTER_LAYER_CLASS(ImageSegData);
 
 }  // namespace caffe

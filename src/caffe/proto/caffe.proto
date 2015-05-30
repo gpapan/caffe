@@ -948,7 +948,7 @@ message SoftmaxParameter {
 
 message SoftmaxLossParameter {
   // specify the data source for loss_weights_
-  optional string weight_source = 16;
+  optional string weight_source = 3;
 }
 
 message TanHParameter {
