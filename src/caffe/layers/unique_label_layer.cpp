@@ -75,5 +75,6 @@ void UniqueLabelLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
 #endif
 
 INSTANTIATE_CLASS(UniqueLabelLayer);
+REGISTER_LAYER_CLASS(UniqueLabel);
 
 }  // namespace caffe
