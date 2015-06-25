@@ -269,7 +269,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 134 (last added: reshape_param)
+// LayerParameter next available layer-specific ID: 137 (last added: reduction_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -333,6 +333,7 @@ message LayerParameter {
   optional EltwiseParameter eltwise_param = 116;
   optional EuclideanLossParameter euclidean_loss_param = 117;
   optional ExpParameter exp_param = 118;
+  optional FlattenParameter flatten_param = 152;
   optional GainChannelParameter gain_channel_param = 119;
   optional HDF5DataParameter hdf5_data_param = 120;
   optional HDF5OutputParameter hdf5_output_param = 121;
@@ -342,6 +343,7 @@ message LayerParameter {
   optional InfogainLossParameter infogain_loss_param = 125;
   optional InnerProductParameter inner_product_param = 126;
   optional InterpParameter interp_param = 127;
+  optional LogParameter log_param = 153;
   optional LRNParameter lrn_param = 128;
   optional MaskParameter mask_param = 129;
   optional MatReadParameter mat_read_param = 130;
@@ -355,6 +357,7 @@ message LayerParameter {
   optional PReLUParameter prelu_param = 138;
   optional PythonParameter python_param = 139;
   optional ReLUParameter relu_param = 140;
+  optional ReductionParameter reduction_param = 154;
   optional ReshapeParameter reshape_param = 141;
   optional SegAccuracyParameter seg_accuracy_param = 142;
   optional SigmoidParameter sigmoid_param = 143;
@@ -612,6 +615,17 @@ message GainChannelParameter {
   optional float thresh = 6 [default = 1e-3];
 }
 
+message FlattenParameter {
+  // The first axis to flatten: all preceding axes are retained in the output.
+  // May be negative to index from the end (e.g., -1 for the last axis).
+  optional int32 axis = 1 [default = 1];
+
+  // The last axis to flatten: all following axes are retained in the output.
+  // May be negative to index from the end (e.g., the default -1 for the last
+  // axis).
+  optional int32 end_axis = 2 [default = -1];
+}
+
 message HDF5DataParameter {
   // Specify the data source.
   optional string source = 1;
@@ -713,6 +727,15 @@ message InterpParameter {
   optional int32 shrink_factor = 4 [default = 1]; // shrink factor
   optional int32 pad_beg = 5 [default = 0]; // padding at begin of input
   optional int32 pad_end = 6 [default = 0]; // padding at end of input
+}
+
+message LogParameter {
+  // LogLayer computes outputs y = log_base(shift + scale * x), for base > 0.
+  // Or if base is set to the default (-1), base is set to e,
+  // so y = ln(shift + scale * x) = log_e(shift + scale * x)
+  optional float base = 1 [default = -1.0];
+  optional float scale = 2 [default = 1.0];
+  optional float shift = 3 [default = 0.0];
 }
 
 message LRNParameter {
@@ -821,6 +844,36 @@ message PythonParameter {
   optional string layer = 2;
 }
 
+// Message that stores parameters used by ReductionLayer
+message ReductionParameter {
+  enum ReductionOp {
+    SUM = 1;
+    ASUM = 2;
+    SUMSQ = 3;
+    MEAN = 4;
+  }
+
+  optional ReductionOp operation = 1 [default = SUM]; // reduction operation
+
+  // The first axis to reduce to a scalar -- may be negative to index from the
+  // end (e.g., -1 for the last axis).
+  // (Currently, only reduction along ALL "tail" axes is supported; reduction
+  // of axis M through N, where N < num_axes - 1, is unsupported.)
+  // Suppose we have an n-axis bottom Blob with shape:
+  //     (d0, d1, d2, ..., d(m-1), dm, d(m+1), ..., d(n-1)).
+  // If axis == m, the output Blob will have shape
+  //     (d0, d1, d2, ..., d(m-1)),
+  // and the ReductionOp operation is performed (d0 * d1 * d2 * ... * d(m-1))
+  // times, each including (dm * d(m+1) * ... * d(n-1)) individual data.
+  // If axis == 0 (the default), the output Blob always has the empty shape
+  // (count 1), performing reduction across the entire input --
+  // often useful for creating new loss functions.
+  optional int32 axis = 2 [default = 0];
+
+  optional float coeff = 3 [default = 1.0]; // coefficient for output
+}
+
+// Message that stores parameters used by ReLULayer
 message ReLUParameter {
   // Allow non-zero slope for negative inputs to speed up optimization
   // Described in:

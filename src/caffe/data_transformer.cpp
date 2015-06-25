@@ -128,7 +128,7 @@ void DataTransformer<Dtype>::Transform(const Datum& datum,
                                        Blob<Dtype>* transformed_blob) {
   // If datum is encoded, decoded and transform the cv::image.
   if (datum.encoded()) {
-    CHECK(!param_.force_color() && !param_.force_gray())
+    CHECK(!(param_.force_color() && param_.force_gray()))
         << "cannot set both force_color and force_gray";
     cv::Mat cv_img;
     if (param_.force_color() || param_.force_gray()) {
@@ -588,7 +588,7 @@ void DataTransformer<Dtype>::TransformImgAndSeg(const std::vector<cv::Mat>& cv_i
 template<typename Dtype>
 vector<int> DataTransformer<Dtype>::InferBlobShape(const Datum& datum) {
   if (datum.encoded()) {
-    CHECK(!param_.force_color() && !param_.force_gray())
+    CHECK(!(param_.force_color() && param_.force_gray()))
         << "cannot set both force_color and force_gray";
     cv::Mat cv_img;
     if (param_.force_color() || param_.force_gray()) {
